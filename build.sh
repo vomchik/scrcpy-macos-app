@@ -109,15 +109,27 @@ build_sdl() {
 
 download_prebuilt_server
 # Build static dependencies
+
+echo "Building static dependencies..."
 build_libusb
+
+echo "build: build_libusb"
+
 build_ffmpeg
+
+echo "build: build_ffmpeg"
 build_sdl
+
+echo "build: build_sdl"
 
 # Configure scrcpy with static dependencies
 PKG_CONFIG_PATH="$PWD/$DEPS_DIR/ffmpeg-install/lib/pkgconfig:$PWD/$DEPS_DIR/sdl-install/lib/pkgconfig:$PWD/$DEPS_DIR/libusb-install/lib/pkgconfig" \
 CFLAGS="-I$PWD/$DEPS_DIR/libusb-install/include -I$PWD/$DEPS_DIR/libusb-install/include/libusb-1.0" \
 CPPFLAGS="-I$PWD/$DEPS_DIR/libusb-install/include" \
 LDFLAGS="-L$PWD/$DEPS_DIR/libusb-install/lib -framework Security -framework CoreFoundation -framework CoreGraphics -framework IOKit -framework AppKit -framework AudioToolbox -framework CoreAudio -framework Metal -framework AVFoundation -framework VideoToolbox" \
+
+echo "Setup meson..."
+
 meson setup "$BUILD_DIR" \
     --buildtype=release \
     --strip \
@@ -128,6 +140,8 @@ meson setup "$BUILD_DIR" \
     -Dprebuilt_server=prebuilt/scrcpy-server-v2.7 \
     -Dc_args="-I$PWD/$DEPS_DIR/libusb-install/include" \
     --wipe
+
+echo "Run ninja..."
 
 # Build scrcpy
 ninja -C "$BUILD_DIR"

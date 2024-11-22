@@ -12,12 +12,26 @@ jobs:
   build:
     runs-on: macos-latest
 
+
     steps:
+    - name: Checkout source code
+      uses: actions/checkout@v4
+      with: 
+        repository: Genymobile/scrcpy
+        ref: v2.7
+
     - name: Checkout repository
       uses: actions/checkout@v4
+      with:
+        path: custom_build
+
+    - name: Install dependencies
+      run: |
+        brew install ninja meson scrcpy
 
     - name: Run build script
       run: |
+        cp custom_build/build.sh .
         chmod +x ./build.sh
         ./build.sh
 
@@ -26,3 +40,8 @@ jobs:
       with:
         name: build
         path: dist
+
+    - name: Save build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: dist
