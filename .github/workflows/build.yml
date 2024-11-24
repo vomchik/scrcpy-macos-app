@@ -40,8 +40,3 @@ jobs:
       with:
         name: build
         path: dist
-
-    - name: Save build artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: dist
